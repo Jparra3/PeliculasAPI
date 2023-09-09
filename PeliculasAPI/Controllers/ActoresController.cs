@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Azure;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
+using PeliculasAPI.Helpers;
 using PeliculasAPI.Servicicos;
 using System.Data.Common;
 
@@ -26,9 +29,12 @@ namespace PeliculasAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ActorDto>>> Get()
+        public async Task<ActionResult<List<ActorDto>>> Get([FromQuery] PaginacionDto paginacionDto)
         {
-            var entidades = await context.Actores.ToListAsync();
+            var queryable = context.Actores.AsQueryable();
+            await HttpContext.InsertarParametrosPaginacion(queryable, paginacionDto.CantidadRegistrosPorPagina);
+
+            var entidades = await queryable.Paginar(paginacionDto).ToListAsync();
             var dto = mapper.Map<List<ActorDto>>(entidades);
             return dto;
         }
@@ -107,6 +113,38 @@ namespace PeliculasAPI.Controllers
             //return new CreatedAtRouteResult("obtenerGenero", new { id = entidad.Id }, entidad);
         }
 
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<ActorPatchDto> patchDocument)
+        {
+            if(patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var entidadDB = await context.Actores.FirstOrDefaultAsync(x => x.Id == id);
+            if (entidadDB == null)
+            {
+                return NotFound();
+            }
+
+            var entidadDTO = mapper.Map<ActorPatchDto>(entidadDB);
+
+            patchDocument.ApplyTo(entidadDTO, ModelState);
+
+            var esValido = TryValidateModel(entidadDTO);
+
+            if (!esValido)
+            {
+                return BadRequest(ModelState);
+            }
+
+            mapper.Map(entidadDTO, entidadDB);
+
+            await context.SaveChangesAsync();
+
+            return NoContent();
+        }
+       
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {

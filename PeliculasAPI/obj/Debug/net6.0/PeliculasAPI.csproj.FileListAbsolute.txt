@@ -73,3 +73,7 @@ C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Azure.Storag
 C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\System.IO.Hashing.dll
 C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\System.Memory.Data.dll
+C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

@@ -28,7 +28,8 @@ namespace PeliculasAPI
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(); //es para agregar el tema del patch, pero no funciona
 
             services.AddEndpointsApiExplorer();
 

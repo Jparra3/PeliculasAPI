@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PeliculasAPI.DTOs
 {
-    public class ActorUpdateDto
+    public class PeliculaCreateDto
     {
-
         [Required]
-        [StringLength(120)]
-        public string Nombre { get; set; }
-        public DateTime FechaNacimiento { get; set; }
+        [StringLength(300)]
+        public string Titulo { get; set; }
+        public bool EnCines { get; set; }
+        public DateTime FechaEstreno { get; set; }
         [PesoArchivoValidacion(pesoMaximoEnMB: 4)]
         [TipoArchivoValidacion(grupoTipoArchivo: GrupoTipoArchivo.Imagen)]
-        public IFormFile Foto { get; set; }
+        public IFormFile Poster { get; set; }
     }
 }
