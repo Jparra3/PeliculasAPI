@@ -77,3 +77,4 @@ C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\obj\Debug\net6.0\refint\Pelic
 C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\obj\Debug\net6.0\PeliculasAPI.pdb
 C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\obj\Debug\net6.0\PeliculasAPI.genruntimeconfig.cache
 C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\obj\Debug\net6.0\ref\PeliculasAPI.dll
+C:\Users\RC\source\repos\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\System.Linq.Dynamic.Core.dll

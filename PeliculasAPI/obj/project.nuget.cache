@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+XQdAq7z6PXH1heewCGDXFfCjy8vkvsB6D/ueLz/MTtbNTkVE+33MFPKhd5eLL2MSdqRX/gP00JCYisPykoGlQ==",
+  "dgSpecHash": "ltdSoiqB8kfN3wI9JBN0Q3YkO09k3L4PJhSMee/+KjGVe947GWoqZWa75CFN4zjkkc66BytTvAvf3FgRb5f0Xw==",
   "success": true,
   "projectFilePath": "C:\\Users\\RC\\source\\repos\\PeliculasAPI\\PeliculasAPI\\PeliculasAPI.csproj",
   "expectedPackageFiles": [
@@ -57,6 +57,7 @@
     "C:\\Users\\RC\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.8.0\\system.identitymodel.tokens.jwt.6.8.0.nupkg.sha512",
     "C:\\Users\\RC\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
     "C:\\Users\\RC\\.nuget\\packages\\system.io.hashing\\6.0.0\\system.io.hashing.6.0.0.nupkg.sha512",
+    "C:\\Users\\RC\\.nuget\\packages\\system.linq.dynamic.core\\1.3.4\\system.linq.dynamic.core.1.3.4.nupkg.sha512",
     "C:\\Users\\RC\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
     "C:\\Users\\RC\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\RC\\.nuget\\packages\\system.reflection\\4.3.0\\system.reflection.4.3.0.nupkg.sha512",
