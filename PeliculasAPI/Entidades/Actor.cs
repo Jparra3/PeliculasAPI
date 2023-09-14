@@ -2,7 +2,7 @@
 
 namespace PeliculasAPI.Entidades
 {
-    public class Actor: IId
+    public class Actor: IId //interfaz que permite ser utilizada para el tema  de la clase CustomBaseController
     {
         public int Id { get; set; }
         [Required]

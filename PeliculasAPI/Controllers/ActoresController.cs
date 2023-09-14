@@ -13,7 +13,7 @@ namespace PeliculasAPI.Controllers
 {
     [ApiController]
     [Route("api/actores")] 
-    public class ActoresController: ControllerBase
+    public class ActoresController: CustomBaseController
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
@@ -21,7 +21,7 @@ namespace PeliculasAPI.Controllers
         private readonly string contenedor = "actores";
 
         public ActoresController(ApplicationDbContext context, 
-            IMapper mapper, IAlmacenarArchivos almacenarArchivos)
+            IMapper mapper, IAlmacenarArchivos almacenarArchivos): base (context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -31,25 +31,27 @@ namespace PeliculasAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ActorDto>>> Get([FromQuery] PaginacionDto paginacionDto)
         {
-            var queryable = context.Actores.AsQueryable();
-            await HttpContext.InsertarParametrosPaginacion(queryable, paginacionDto.CantidadRegistrosPorPagina);
+            //var queryable = context.Actores.AsQueryable();
+            //await HttpContext.InsertarParametrosPaginacion(queryable, paginacionDto.CantidadRegistrosPorPagina);
 
-            var entidades = await queryable.Paginar(paginacionDto).ToListAsync();
-            var dto = mapper.Map<List<ActorDto>>(entidades);
-            return dto;
+            //var entidades = await queryable.Paginar(paginacionDto).ToListAsync();
+            //var dto = mapper.Map<List<ActorDto>>(entidades);
+            //return dto;
+            return await Get<Actor, ActorDto>(paginacionDto);
         }
 
         [HttpGet("{id:int}", Name = "obtenerActor")]
         public async Task<ActionResult<ActorDto>> Get(int id)
         {
-            var entidad = await context.Actores.FirstOrDefaultAsync(x => x.Id == id);
+            //var entidad = await context.Actores.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (entidad == null)
-            {
-                return NotFound();
-            }
+            //if (entidad == null)
+            //{
+            //    return NotFound();
+            //}
 
-            return mapper.Map<ActorDto>(entidad);            
+            //return mapper.Map<ActorDto>(entidad);            
+            return await Get<Actor, ActorDto>(id);
         }
 
         [HttpPost]

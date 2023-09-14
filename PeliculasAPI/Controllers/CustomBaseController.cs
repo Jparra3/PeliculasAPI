@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Azure;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
+using PeliculasAPI.Helpers;
 
 namespace PeliculasAPI.Controllers
 {
@@ -22,6 +25,17 @@ namespace PeliculasAPI.Controllers
             var entidades = await context.Set<TEntidad>().ToListAsync();
             var dtos = mapper.Map<List<TDto>>(entidades);
             return dtos;
+        }
+
+        protected async Task<List<TDto>> Get<TEntidad, TDto>(PaginacionDto paginacionDto)
+            where TEntidad: class
+        {
+            var queryable = context.Set<TEntidad>().AsQueryable();
+            await HttpContext.InsertarParametrosPaginacion(queryable, paginacionDto.CantidadRegistrosPorPagina);
+
+            var entidades = await queryable.Paginar(paginacionDto).ToListAsync();
+            var dto = mapper.Map<List<TDto>>(entidades);
+            return dto;
         }
         protected async Task<ActionResult<TDto>> Get<TEntidad, TDto>(int id) where TEntidad : class, IId
         {
@@ -52,6 +66,39 @@ namespace PeliculasAPI.Controllers
             entidad.Id = id;
             context.Entry(entidad).State = EntityState.Modified;
             await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        protected async Task<ActionResult> Patch<TEntidad, TDto>(int id, JsonPatchDocument<TDto> patchDocument)
+            where TDto : class
+            where TEntidad : class, IId
+        {
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var entidadDB = await context.Set<TEntidad>().FirstOrDefaultAsync(x => x.Id == id);
+            if (entidadDB == null)
+            {
+                return NotFound();
+            }
+
+            var entidadDTO = mapper.Map<TDto>(entidadDB);
+
+            patchDocument.ApplyTo(entidadDTO, ModelState);
+
+            var esValido = TryValidateModel(entidadDTO);
+
+            if (!esValido)
+            {
+                return BadRequest(ModelState);
+            }
+
+            mapper.Map(entidadDTO, entidadDB);
+
+            await context.SaveChangesAsync();
+
             return NoContent();
         }
 
