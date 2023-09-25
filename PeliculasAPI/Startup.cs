@@ -1,7 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using PeliculasAPI.Helpers;
 using PeliculasAPI.Servicicos;
+using System.Text;
 
 namespace PeliculasAPI
 {
@@ -24,16 +31,53 @@ namespace PeliculasAPI
             services.AddHttpContextAccessor();
             // ↑↑↑↑
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            //↓↓↓↓ Registrar una vlidacion para saber si existe el id de una pelicula
+            services.AddScoped<PeliculaExisteAttribute>();
+
+            //↓↓↓↓↓
+            //Se configura el geometry factory para ser usado en el AutoMapper sin estar usando el hardCode
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+
+            //se utiliza para usar inyección de dependencias
+            services.AddSingleton(provider =>
+                new MapperConfiguration(config =>{
+                    var geometryFactpry = provider.GetRequiredService<GeometryFactory>();
+                    config.AddProfile(new AutoMapperProfiles(geometryFactpry));
+                }).CreateMapper()
             );
+
+            //↑↑↑↑↑
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                //se pueden utilizar tipos de datos de la librería netTopolySuite
+                sqlServerOptions => sqlServerOptions.UseNetTopologySuite()
+            ));
 
             services.AddControllers()
                 .AddNewtonsoftJson(); //es para agregar el tema del patch, pero no funciona
 
-            services.AddEndpointsApiExplorer();
 
-            
+            //↓↓↓↓↓↓↓↓  Agregar IdentityUser Tema de autenticación ↓↓↓↓↓↓↓↓  
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+                    ClockSkew = TimeSpan.Zero
+                });
+            //↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+            services.AddEndpointsApiExplorer();                   
 
             services.AddSwaggerGen(c =>
             {
